@@ -8,7 +8,7 @@ function Resolve(onscope = f => x, onget = x => y, onset = x => y) {
 }
 Resolve.prototype.get = function(target, prop, rec) {
     if(typeof prop === "symbol") return
-
+    if(!rec) return this.namespace.get(prop)
     return this.onget(prop, this.namespace.get(prop))
 }
 Resolve.prototype.set = function(target, prop, value, rec) {
@@ -24,11 +24,13 @@ Resolve.prototype.has = function(target, prop) {
         var value = this.namespace.get(prop)
     else
         var value = this.scope(prop)
+    if(prop in globalThis && value === globalThis[prop])
+        return false
     this.namespace.set(prop, value)
     return value !== U
 }
 
-export function create_reference_resolver(onreturn = (val, memo, creator) => memo, onget = (prop, val) => val, onset = (prop, val, prev) => val) {
+export function create_reference_resolver({onreturn = (val, memo, creator) => memo, onget = (prop, val) => val, onset = (prop, val, prev) => val} = {}) {
     return function create_scope(onscope) {
         const resolver = new Resolve(scoper(onscope), onget, onset)
         const proxy = new Proxy({}, resolver)
