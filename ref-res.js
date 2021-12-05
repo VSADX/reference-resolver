@@ -3,6 +3,7 @@ const U = Symbol("undefined")
 function Resolve(onscope = f => x, onget = x => y, onset = x => y) {
     this.scope = onscope
     this.namespace = new Map
+    this.workspace = {}
     this.onget = onget
     this.onset = onset
 }
