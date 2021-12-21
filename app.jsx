@@ -6,7 +6,7 @@ function App() {
     const { useCallback } = useResolver(f => eval(f))
 
 	const all = useSignal(["Ellie", "Milo", "Bella", "Michael"])
-	const add = useCallback(name => all = [...ppl, name])
+	const add = useCallback(name => all = [...all, name])
 
 	return <>
 		<p>Social App</p>
@@ -35,8 +35,10 @@ function AddUser({onadd}) {
 	</>
 }
 function User({name}) {
+	const color = `color: #${Math.random().toString(16).toUpperCase().slice(2, 8)};`
+	
 	return <>
-		<li> {name} <br /><br /> </li>
+		<li style={color}> {name} <br /><br /> </li>
 	</>
 }
 render(App, document.body)
