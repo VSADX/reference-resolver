@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+	start("./app.jsx", "E48FEA")
+    
+    async function start(app_url, lib_id) {
+
+        const file = "./jsx-compiling-sw.js"
+
+        const sw = navigator.serviceWorker
+		const reg = await sw.register(`${file}?v=${lib_id}`)
+		await sw.ready
+
+		const msg = localStorage.getItem(file) == lib_id
+		localStorage.setItem(file, lib_id)
+		reg.active.postMessage(msg)
+		sw.onmessage = () => import(app_url)
+    }
+</script>
+
+<title>Simple test</title>
